@@ -3,12 +3,14 @@ package Entidades;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 @Entity
@@ -22,6 +24,21 @@ public class Videogame implements Serializable {
 
     @Column(nullable = false)
     private int rating;
+    
+    @ManyToMany(mappedBy = "videogames", cascade = CascadeType.PERSIST)
+    private Collection<Player> players;
+    
+    public Collection<Player> getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(Collection<Player> players) {
+        this.players = players;
+    }
+    
+    public void addPlayer(Player p){
+        players.add(p);
+    }
 
     public int getRating() {
         return rating;
@@ -63,12 +80,15 @@ public class Videogame implements Serializable {
 
     public Videogame() {
         this.achievements = new HashSet();
+        this.players = new HashSet();
     }
 
     public void addAchievement(Achievement a) {
         a.setVideogame(this);
         this.achievements.add(a);
     }
+    
+    
 
     @Override
     public int hashCode() {
